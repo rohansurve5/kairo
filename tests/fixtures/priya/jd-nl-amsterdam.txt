@@ -1,0 +1,22 @@
+Product Manager, Merchant Checkout
+Tulip Commerce B.V. (fictional test company) · Amsterdam, Netherlands · Hybrid
+
+Tulip Commerce builds checkout and billing tools for 25,000 online merchants across Europe. Our B2B SaaS platform processes card, iDEAL and wallet payments.
+
+What you'll do
+- Own the merchant checkout experience end to end, from payment methods to conversion.
+- Work with a cross-functional team of 7 engineers, a designer and an analyst.
+- Talk to merchants every week and turn what you learn into a clear roadmap.
+- Use data and A/B testing to improve checkout conversion and payment success.
+
+What we're looking for
+- 5+ years of experience in product management, with at least 2 years in payments, checkout or billing.
+- Experience with B2B SaaS products and merchants.
+- Strong analytical skills; SQL is a plus.
+- Excellent English. Dutch is a plus, not required.
+
+What we offer
+- Salary: €68,000 – €82,000 per year, plus 8% holiday allowance.
+- We are an IND recognised sponsor and offer visa sponsorship (highly skilled migrant) and relocation support.
+- 30% ruling for eligible candidates.
+- 27 vacation days.

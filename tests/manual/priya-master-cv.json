@@ -1,0 +1,107 @@
+{
+  "kairo": "cv/1",
+  "country": "IN",
+  "target": {
+    "company": "",
+    "role": ""
+  },
+  "name": "Priya Sharma",
+  "headline": "Senior Product Manager | Payments · EdTech / learning · Mobile apps",
+  "contact": {
+    "location": "Pune, India",
+    "email": "priya.sharma@example.com",
+    "phone": "+91 90000 00001",
+    "linkedin": "https://www.linkedin.com/in/priya-sharma-example",
+    "website": ""
+  },
+  "personal": {
+    "nationality": "Indian",
+    "home_country": "IN",
+    "open_to_relocation": true,
+    "needs_visa": false
+  },
+  "summary": "Product manager with 9 years across payments, edtech and retail tech, from analyst to senior PM. At Kestrel Payments I cut checkout drop-off from 38% to 24% and launched subscription billing for 1,200 SMB merchants in 5 months.",
+  "experience": [
+    {
+      "title": "Senior Product Manager",
+      "company": "Kestrel Payments",
+      "location": "Pune, India",
+      "dates": "04/2022 – Present",
+      "bullets": [
+        "Cut checkout drop-off from 38% to 24% by moving to a 2-step UPI and card flow.",
+        "Led a team of 6 engineers and 2 designers to rebuild the merchant checkout; payment success rate rose from 91% to 96%.",
+        "Launched a subscription billing product for 1,200 SMB merchants in 5 months.",
+        "Ran weekly discovery calls with merchants and turned 40+ interviews into a 2-quarter roadmap.",
+        "Owned the reconciliation dashboard used by 300 finance users; month-end close went from 6 days to 2."
+      ]
+    },
+    {
+      "title": "Product Manager",
+      "company": "Brightpath Learning",
+      "location": "Mumbai, India",
+      "dates": "07/2019 – 03/2022",
+      "bullets": [
+        "Grew paid conversion from 2.1% to 3.4% with a free-trial redesign and A/B tests.",
+        "Built the mobile learning app (Android and iOS) from 0 to 250,000 monthly active learners.",
+        "Replaced a third-party LMS costing ₹4,50,000 a year with an in-house tool.",
+        "Worked with 3 engineering squads in Scrum and shipped every 2 weeks."
+      ]
+    },
+    {
+      "title": "Product Analyst",
+      "company": "Orbit Retail Tech",
+      "location": "Pune, India",
+      "dates": "06/2017 – 06/2019",
+      "bullets": [
+        "Built weekly sales dashboards in SQL and Metabase for 45 store managers.",
+        "Found a pricing error worth ₹18 lakh a quarter and helped the team fix it."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Kirana Ledger",
+      "url": "https://example.com/kirana-ledger",
+      "dates": "2024",
+      "bullets": [
+        "Built a no-code bookkeeping app for small shops with Bubble; 150 shops signed up in 3 months."
+      ]
+    }
+  ],
+  "skills": [
+    "Product strategy",
+    "Roadmapping",
+    "Product discovery",
+    "User research",
+    "A/B testing",
+    "SQL",
+    "Metabase",
+    "Payments",
+    "UPI",
+    "Subscription billing",
+    "Mobile apps (Android, iOS)",
+    "Agile / Scrum",
+    "Jira",
+    "Figma",
+    "Stakeholder management",
+    "Data analysis",
+    "PRD writing",
+    "Go-to-market"
+  ],
+  "education": [
+    "B.E. Computer Engineering, Pune University, 2013 – 2017"
+  ],
+  "certifications": [
+    "Certified Scrum Product Owner (CSPO), Scrum Alliance, 2021",
+    "Google Analytics Certification, Google, 2020"
+  ],
+  "languages": [
+    "English (C1)",
+    "Hindi (Native)",
+    "Marathi (Native)",
+    "German (A2)"
+  ],
+  "options": {
+    "projects_first": false
+  }
+}

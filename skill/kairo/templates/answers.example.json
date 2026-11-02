@@ -1,0 +1,15 @@
+{
+  "kairo": "answers/1",
+  "company": "Company Name B.V.",
+  "role": "Job title from the JD",
+  "answers": [
+    {
+      "q": "Why Company Name?",
+      "a": "At most 80 words. Facts from my-facts, company facts from the JD."
+    },
+    {
+      "q": "Describe a product you launched.",
+      "a": "At most 80 words, with a real result."
+    }
+  ]
+}

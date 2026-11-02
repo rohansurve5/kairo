@@ -1,0 +1,25 @@
+{
+  "kairo": "letter/1",
+  "country": "NL",
+  "name": "First Last",
+  "headline": "Product Manager",
+  "contact": {
+    "location": "City, Country",
+    "email": "you@example.com",
+    "phone": "+00 00000 00000",
+    "linkedin": "https://www.linkedin.com/in/your-profile",
+    "website": ""
+  },
+  "personal": { "home_country": "IN", "open_to_relocation": true },
+  "date": "2 November 2026",
+  "company": "Company Name B.V.",
+  "role": "Job title from the JD",
+  "greeting": "Dear Company Name hiring team,",
+  "paragraphs": [
+    "Why them, and the link to your real work.",
+    "Proof one: the strongest matching result with its real number.",
+    "Proof two, plus one honest line on a real gap if useful.",
+    "Practical close: location, relocation, and one closing line."
+  ],
+  "closing": "Kind regards,"
+}

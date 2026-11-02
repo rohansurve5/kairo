@@ -1,0 +1,27 @@
+Product Manager – Merchant Payments
+Nirvana Ledger (fictional test company) · Bengaluru, India · Hybrid (3 days in office)
+Posted 4 days ago
+
+About Nirvana Ledger
+Nirvana Ledger is a Series B B2B SaaS company that helps 60,000 small businesses in India collect payments, send invoices and run subscriptions. We raised $40M in 2025.
+
+The role
+You will own our merchant checkout and subscription billing products. You will work with 2 engineering squads, design and data to grow payment success and reduce merchant churn.
+
+What you will do
+- Own the roadmap for checkout, UPI AutoPay and subscription billing for SMB merchants.
+- Run discovery with merchants and turn insights into clear PRDs.
+- Define metrics, run A/B tests and report on payment success rate.
+- Work with sales and support on go-to-market for new payment features.
+
+What you bring
+- 5–8 years of product management experience, ideally in payments or fintech.
+- Strong understanding of UPI, cards and subscription billing.
+- Experience with SQL or analytics tools to answer your own questions.
+- Experience building B2B SaaS products for small businesses.
+- Nice to have: experience with mobile apps (Android / iOS).
+
+Compensation
+₹30 – 42 LPA fixed + ESOPs.
+
+We prefer candidates who can join within 60 days.

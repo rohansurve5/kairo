@@ -1,0 +1,25 @@
+{
+  "kairo": "letter/1",
+  "country": "NL",
+  "name": "Priya Sharma",
+  "headline": "Senior Product Manager",
+  "contact": {
+    "location": "Pune, India",
+    "email": "priya.sharma@example.com",
+    "phone": "+91 90000 00001",
+    "linkedin": "https://www.linkedin.com/in/priya-sharma-example",
+    "website": ""
+  },
+  "personal": { "home_country": "IN", "open_to_relocation": true },
+  "date": "2 November 2026",
+  "company": "Tulip Commerce B.V.",
+  "role": "Product Manager, Merchant Checkout",
+  "greeting": "Dear Tulip Commerce hiring team,",
+  "paragraphs": [
+    "Tulip Commerce helps 25,000 online merchants across Europe get paid at checkout. That is the problem I have worked on at Kestrel Payments since 2022, so your Product Manager, Merchant Checkout role is a close match.",
+    "At Kestrel Payments I led a team of 6 engineers and 2 designers to rebuild our merchant checkout. Payment success rose from 91% to 96%, and moving to a 2-step UPI and card flow cut drop-off from 38% to 24%. I also launched subscription billing for 1,200 SMB merchants in 5 months.",
+    "I talk to merchants every week and use A/B tests to decide what ships. At Brightpath Learning that habit grew paid conversion from 2.1% to 3.4%. I have not worked with iDEAL yet, so I would start by learning it from your merchant data and payments team.",
+    "I am based in Pune and ready to relocate to Amsterdam. As an IND recognised sponsor, Tulip Commerce can follow the usual highly skilled migrant process. I would welcome a conversation."
+  ],
+  "closing": "Kind regards,"
+}

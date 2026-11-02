@@ -1,0 +1,19 @@
+{
+  "kairo": "answers/1",
+  "company": "Tulip Commerce B.V.",
+  "role": "Product Manager, Merchant Checkout",
+  "answers": [
+    {
+      "q": "Why Tulip Commerce?",
+      "a": "You build checkout for merchants, which is what I have done at Kestrel Payments since 2022. I rebuilt our checkout and cut drop-off from 38% to 24%. Your scale of 25,000 merchants across Europe, with card, iDEAL and wallet payments, is the next step I want."
+    },
+    {
+      "q": "Describe a product you launched.",
+      "a": "At Kestrel Payments I launched a subscription billing product for 1,200 SMB merchants in 5 months. I ran the discovery calls with merchants, wrote the PRDs and worked with engineering and design from the first sketch to launch."
+    },
+    {
+      "q": "How do you use data in product decisions?",
+      "a": "I agree a success metric before we build, then test. At Brightpath Learning a free-trial redesign, tested with A/B tests, grew paid conversion from 2.1% to 3.4%. I write my own SQL for quick questions."
+    }
+  ]
+}

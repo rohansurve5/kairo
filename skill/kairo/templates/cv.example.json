@@ -1,0 +1,54 @@
+{
+  "kairo": "cv/1",
+  "country": "NL",
+  "target": { "company": "Company Name B.V.", "role": "Job title from the JD" },
+  "name": "First Last",
+  "headline": "Product Manager | Area · Area · Area",
+  "contact": {
+    "location": "City, Country",
+    "email": "you@example.com",
+    "phone": "+00 00000 00000",
+    "linkedin": "https://www.linkedin.com/in/your-profile",
+    "website": ""
+  },
+  "personal": {
+    "nationality": "Indian",
+    "home_country": "IN",
+    "open_to_relocation": true,
+    "needs_visa": true,
+    "date_of_birth": null,
+    "photo": null
+  },
+  "summary": "At most 60 words. Who you are (from my-facts), one strongest matching result with its real number. Abroad: Open to relocation.",
+  "experience": [
+    {
+      "title": "Exact title from my-facts",
+      "company": "Exact company from my-facts",
+      "location": "City, Country",
+      "dates": "MM/YYYY – Present",
+      "bullets": [
+        "Bullet from my-facts, most relevant first.",
+        "Another bullet with a real number."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Project name from my-facts",
+      "url": "https://example.com",
+      "dates": "YYYY",
+      "bullets": ["What it is and a real result."]
+    }
+  ],
+  "skills": ["Skill from my-facts", "Another skill"],
+  "education": ["Degree, University, YYYY – YYYY"],
+  "certifications": ["Certificate, Issuer, YYYY"],
+  "languages": ["English (C1)", "Hindi (Native)"],
+  "additional": [],
+  "options": {
+    "projects_first": false,
+    "include_photo": false,
+    "include_dob": false,
+    "max_pages": 2
+  }
+}
