@@ -30,6 +30,9 @@ Last updated: YYYY-MM-DD
 - Countries: IN, NL, AE
 - Cities: Pune, Bengaluru, Amsterdam, Dubai
 - Open to relocation: yes
+- Open to contract roles: no
+- Open to shift or night work: no
+<!-- Optional: - Open to travel: yes   (only if you said so; Kairo never assumes a preference) -->
 - Score floor: 60
 - Avoid: IT services companies, crypto
 

@@ -8,6 +8,8 @@ Checks
   * capitalised names / tools / clients exist in my-facts (or the JD, for letter and answers)
   * skills, education, certifications, languages and levels come from my-facts
   * "Never claim" lines from my-facts and generic fluff words are absent
+  * a work preference (relocation, contract roles, shift/night work, travel, notice/start) is stated only
+    when my-facts says it, and only the way my-facts says it
   * word limits, and the share of CV bullets that carry a number
   * country rules: photo / date of birth only where allowed, CEFR levels for Germany
 
@@ -27,7 +29,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kairo_lib import (  # noqa: E402
-    COUNTRIES, capitalised_names, country_code, date_key, find_job, fold, load_facts, load_json,
+    PREF_LABELS, preference_claims, COUNTRIES, capitalised_names, country_code, date_key, find_job, fold, load_facts, load_json,
     needs_visa, norm_space, number_tokens, number_values, parse_languages, read_text, title_key, word_count,
 )
 
@@ -135,6 +137,22 @@ def check_claims(rep, doc, where, text, facts):
             rep.err(doc, where, f'fluff phrase "{m.group(0)}": say what was done and the result instead')
 
 
+def check_preferences(rep, doc, where, text, facts):
+    """Never state a preference the user did not give (prompt 4, rule 2)."""
+    for key, claimed, said in preference_claims(text):
+        label = PREF_LABELS[key]
+        if key == "notice":
+            if not facts.get("notice"):
+                rep.err(doc, where, f'"{said}": my-facts has no notice period. Ask the user; do not write it')
+            continue
+        have = facts.get(key)
+        if have is None:
+            rep.err(doc, where, f'"{said}": my-facts does not say if you are open to {label}. Ask the user, '
+                                f'add it to my-facts, then write it')
+        elif have != claimed:
+            rep.err(doc, where, f'"{said}": my-facts says you are {"" if have else "NOT "}open to {label}')
+
+
 def check_identity(rep, doc, obj, facts):
     if obj.get("name") and fold(obj["name"]) != fold(facts["name"]):
         rep.err(doc, "header", f'name "{obj["name"]}" differs from my-facts "{facts["name"]}"')
@@ -196,6 +214,8 @@ def check_cv(rep, cv, facts, lim):
         want = needs_visa(facts, country)
         if bool(personal["needs_visa"]) != want:
             rep.err(D, "header", f"needs_visa={personal['needs_visa']} but my-facts visa needs for {country} say {want}")
+    if personal.get("open_to_relocation") and facts.get("relocate") is not True:
+        rep.err(D, "header", "open_to_relocation is true, but my-facts does not say 'Open to relocation: yes' (ask the user)")
     if opts.get("include_photo") or personal.get("photo"):
         if country not in PHOTO_OK:
             rep.err(D, "header", f"no photo on a CV for {country} (allowed only for {', '.join(sorted(PHOTO_OK))}, and off by default)")
@@ -352,6 +372,7 @@ def check_letter(rep, L, facts, jd, lim):
         check_numbers(rep, D, f"paragraph {i}", p, allowed)
         check_names(rep, D, f"paragraph {i}", p, facts["name_text"] + "\n" + extra)
     check_claims(rep, D, "body", body, facts)
+    check_preferences(rep, D, "body", body, facts)
     comp = L.get("company", "")
     if comp and fold(comp.split()[0]) not in fold(body):
         rep.warn(D, "body", f'the letter never names "{comp}": make it specific to them')
@@ -373,6 +394,7 @@ def check_answers(rep, A, facts, jd, lim):
         check_numbers(rep, D, w, a, allowed)
         check_names(rep, D, w, a, facts["name_text"] + "\n" + extra)
         check_claims(rep, D, w, a, facts)
+        check_preferences(rep, D, w, a, facts)
     rep.stats["answers"] = {"count": len(items)}
 
 

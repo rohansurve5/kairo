@@ -32,7 +32,10 @@ The script tags each flag `skip`, `maybe` or `note`. Confirm each one by reading
 | `visa_unknown`                                                                                                                                                                           | Maybe                                          | visa needed and the JD is silent or unclear: ask the recruiter                   |
 | `sponsor_not_found`                                                                                                                                                                      | Maybe                                          | not found on the official sponsor register (you add this one): ask the recruiter |
 | `salary_below_floor`                                                                                                                                                                     | Maybe                                          | posted maximum is below the user's minimum: ask whether the budget can reach it  |
-| `years_below`, `jd_not_english`, `location_not_target`, `seniority_mismatch`, `title_mismatch`, `specialised_domain`, `contract_role`, `agency_post`, `stale_posting`, `notice_too_long` | note                                           | worth saying; not a verdict on its own                                           |
+| `contract_role` | Skip if my-facts says `Open to contract roles: no`, else note | contract / fixed-term / freelance role; if my-facts does not say, note it and ask the user |
+| `shift_work` | Skip if my-facts says `Open to shift or night work: no`, else note | night, rotational, US/UK shift hours; if my-facts does not say, note it and ask the user |
+| `location_not_target` | Skip if the job needs a move and my-facts says `Open to relocation: no`, else note | country not in targets, or a move to another city/country (remote jobs never need a move) |
+| `years_below`, `jd_not_english`, `seniority_mismatch`, `title_mismatch`, `specialised_domain`, `agency_post`, `stale_posting`, `notice_too_long` | note | worth saying; not a verdict on its own |
 
 Also check, from the connector summary or the chat tracker:
 
@@ -41,7 +44,7 @@ Also check, from the connector summary or the chat tracker:
 
 ## 4. Verdict: Apply, Maybe or Skip
 
-- **Skip** only when: the job clearly says no sponsorship or local candidates only (and the user needs a visa), a must-have is missing, or the final score is under the user's score floor (my-facts `Score floor`, default 60).
+- **Skip** only when: the job clearly says no sponsorship or local candidates only (and the user needs a visa), a must-have is missing, the job is a contract role / shift or night work / needs a move and my-facts says the user is **not** open to it, or the final score is under the user's score floor (my-facts `Score floor`, default 60). A preference my-facts does not mention is never a Skip: note it and ask.
 - **Maybe** when: none of the Skip reasons apply, but visa or sponsorship is unclear (or the posted salary is under the user's floor). Tell the user exactly what to ask the recruiter.
 - **Apply** otherwise.
 - The user can say "apply anyway" after Skip or Maybe. Then continue, and keep the flags in your reply.

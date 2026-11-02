@@ -22,7 +22,18 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kairo_lib import (  # noqa: E402
     country_code, country_name, fold, format_money, load_facts, needs_visa, parse_salary, read_text, salary_answer,
 )
-from jd_scan import notice_days  # noqa: E402
+from jd_scan import CONTRACT, SHIFT, TRAVEL, notice_days  # noqa: E402
+from kairo_lib import PREF_LABELS  # noqa: E402
+
+
+def _pref_row(facts, key, question, flags):
+    """Yes/No from my-facts, or ASK THE USER (never assume a preference)."""
+    v = facts.get(key)
+    if v is None:
+        ask = f"ASK THE USER: my-facts does not say if you are open to {PREF_LABELS[key]}. Never assume."
+        flags.append(ask)
+        return (question, ask)
+    return (question, "Yes" if v else "No")
 
 
 def build(facts, country, jd="", salary_text="", company="", role="", city="", override=None):
@@ -39,9 +50,10 @@ def build(facts, country, jd="", salary_text="", company="", role="", city="", o
 
     loc = f"{facts['home_city']}, {country_name(home)}" if facts["home_city"] else country_name(home)
     other_city = bool(city) and fold(city) != fold(facts["home_city"])
-    if facts["relocate"] and abroad:
+    flags = []
+    if facts["relocate"] is True and abroad:
         loc += " (open to relocation)"
-    elif facts["relocate"] and other_city:
+    elif facts["relocate"] is True and other_city:
         loc += f" (open to relocating to {city})"
     rows.append(("Current location", loc))
     if abroad and facts["nationality"]:
@@ -53,12 +65,22 @@ def build(facts, country, jd="", salary_text="", company="", role="", city="", o
         rows.append((f"Authorised to work in {country_name(code)} without sponsorship?",
                      "No" + (f": {vtext}" if vtext else ", I need visa sponsorship") if visa else "Yes"))
         rows.append(("Will you need visa sponsorship?", "Yes" if visa else "No"))
-        rows.append(("Willing to relocate?", "Yes" if facts["relocate"] else "No"))
+        rows.append(_pref_row(facts, "relocate", "Willing to relocate?", flags))
     elif other_city:
-        rows.append(("Willing to relocate?", "Yes" if facts["relocate"] else "No"))
+        rows.append(_pref_row(facts, "relocate", "Willing to relocate?", flags))
+    if CONTRACT.search(jd or ""):
+        rows.append(_pref_row(facts, "contract_ok", "Open to a contract / fixed-term role?", flags))
+    if SHIFT.search(jd or ""):
+        rows.append(_pref_row(facts, "shifts_ok", "Open to shift or night work?", flags))
+    if TRAVEL.search(jd or ""):
+        rows.append(_pref_row(facts, "travel_ok", "Willing to travel?", flags))
 
     if facts["notice"]:
         rows.append(("Notice period / earliest start", facts["notice"]))
+    else:
+        ask = "ASK THE USER: my-facts has no notice period. Never assume a start date."
+        rows.append(("Notice period / earliest start", ask))
+        flags.append(ask)
     if facts["years"] is not None:
         rows.append(("Total experience", f"{facts['years']:g} years"))
     if facts["me"].get("languages"):
@@ -67,7 +89,6 @@ def build(facts, country, jd="", salary_text="", company="", role="", city="", o
     posted = parse_salary(salary_text or "") or parse_salary(jd or "")
     row = facts["salary"].get(code)
     sal = None
-    flags = []
     missing_money = [k for k in ("expected", "minimum") if not row or row.get(k) is None]
     if missing_money and not override:
         ask = (f"ASK THE USER: my-facts has no {' or '.join('ask' if k == 'expected' else 'floor' for k in missing_money)}"

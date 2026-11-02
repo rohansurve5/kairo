@@ -241,6 +241,48 @@ def _section_key(heading: str) -> str:
     return "other:" + h
 
 
+# ---------------------------------------------------------------- work preferences (prompt 4)
+
+PREF_LINES = {"relocate": "Open to relocation", "contract_ok": "Open to contract roles",
+              "shifts_ok": "Open to shift or night work", "travel_ok": "Open to travel"}
+PREF_LABELS = {"relocate": "relocation", "contract_ok": "contract or fixed-term roles",
+               "shifts_ok": "shift or night work", "travel_ok": "travel", "notice": "your notice period / start date"}
+_WILL = r"(?:open to|willing to|happy to|ready to|keen to|able to|comfortable with|fine with|available for|can|will|plan to)"
+# A sentence in a cover letter or answer that states one of the user's preferences.
+PREF_CLAIMS = {
+    "relocate": re.compile(_WILL + r"\s+(?:re)?locat\w*|\brelocating to\b|\bmove to [A-Z]", re.I),
+    "contract_ok": re.compile(_WILL + r"\s+(?:a |an |take on |work on |work |do )?(?:contract|fixed[- ]term|freelance|temporary)\b", re.I),
+    "shifts_ok": re.compile(_WILL + r"\s+(?:work |do )?(?:in )?(?:night|rotational|rotating|evening|weekend|late|us|uk)?\s?"
+                            r"(?:shifts?|night work|nights|odd hours)\b", re.I),
+    "travel_ok": re.compile(_WILL + r"\s+travel\b", re.I),
+    "notice": re.compile(r"\b(?:notice period|available to (?:start|join)|can (?:start|join)|start (?:immediately|within|on)|"
+                         r"join (?:immediately|within|on))\b", re.I),
+}
+_NEG = re.compile(r"(?:\bnot\b|n't|\bno\b|\bunable\b|\bunwilling\b|\bcannot\b)[^.]{0,12}$", re.I)
+
+
+def pref_value(v):
+    """'yes' -> True, 'no' -> False, missing/unclear -> None."""
+    t = fold(v or "")
+    if not t:
+        return None
+    if t.startswith(("y", "true", "open", "ok")):
+        return True
+    if t.startswith(("n", "false", "not")):
+        return False
+    return None
+
+
+def preference_claims(text: str) -> list:
+    """[(pref key, claimed True/False, matched text)] for preferences a letter/answer states."""
+    out = []
+    for key, rx in PREF_CLAIMS.items():
+        for m in rx.finditer(text or ""):
+            before = text[max(0, m.start() - 20):m.start()]
+            out.append((key, not _NEG.search(before + m.group(0)[:0]), m.group(0)))
+    return out
+
+
 def _kv(lines) -> dict:
     out = {}
     for ln in lines:
@@ -399,7 +441,11 @@ def parse_facts(text: str) -> dict:
     f["targets"] = tg
     f["target_roles"] = _split_skills(tg.get("roles", ""))
     f["target_countries"] = [country_code(c) for c in _split_skills(tg.get("countries", ""))]
-    f["relocate"] = fold(tg.get("open to relocation", "yes")).startswith(("y", "true", "open"))
+    # Work preferences: True / False / None (not in my-facts -> never assume; ask the user).
+    f["relocate"] = pref_value(tg.get("open to relocation"))
+    f["contract_ok"] = pref_value(tg.get("open to contract roles", tg.get("open to contract or fixed-term roles")))
+    f["shifts_ok"] = pref_value(tg.get("open to shift or night work", tg.get("open to shift work")))
+    f["travel_ok"] = pref_value(tg.get("open to travel"))
     floor = re.search(r"\d+", tg.get("score floor", ""))
     f["score_floor"] = int(floor.group(0)) if floor else 60
 
@@ -514,6 +560,9 @@ def parse_languages(text: str) -> dict:
 
 def _lint(f: dict) -> None:
     L = f["lint"]
+    for key, line in PREF_LINES.items():
+        if key != "travel_ok" and f.get(key) is None:
+            L.append(("warn", f"'## Targets' has no '- {line}: yes/no' (ask the user; never assume)"))
     for key, label in (("name", "Name"), ("email", "Email")):
         if not f.get(key):
             L.append(("error", f"'## Me' is missing '- {label}: ...'"))

@@ -1,6 +1,15 @@
 # Kairo connector (dashboard) and the chat tracker
 
-The Kairo dashboard is optional and free. The user adds it in Claude as a custom connector (a personal secret link). Its server uses no AI and stores only public job data, scores, verdicts, red flags, visa flags and status history. Full contract: `docs/CONNECTOR-CONTRACT.md` in the Kairo repository (v1.1).
+The Kairo dashboard is optional and free. The user signs in at the dashboard with their email (a 6-digit code, no password) and adds Kairo in Claude as a custom connector with a plain URL (no secret in it): `connector_url` in `config.json`. Claude then asks them to sign in with the same email. Its server uses no AI and stores only public job data, scores, verdicts, red flags, visa flags and status history. Full contract: `docs/CONNECTOR-CONTRACT.md` in the Kairo repository (v1.2).
+
+## How to connect (only if the user asks, and only when `launched` is true in config.json)
+
+If `launched` is false, say the dashboard is not open yet and use the chat tracker. If it is true, give these steps:
+
+1. Open `dashboard_url`, sign in with your email (we send a 6-digit code) and tick the consent box.
+2. In Claude: Customize → Connectors → Add custom connector. Name: Kairo. URL: `connector_url`.
+3. Click Connect and sign in with the same email.
+4. In the connector settings, set the three Kairo tools to "Always allow".
 
 ## Is it connected?
 
@@ -11,7 +20,7 @@ The connector is available when you can see tools named `kairo_save_job`, `kairo
 | Send                                                                                                                                                                                                       | Never send                                                                                                                                                                                                                          |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | job: title, company, company website, country code, city, work mode, the job link, source, posting date, years asked (as written), the posted salary (min, max, currency, period), the full public JD text | the CV or any CV line, my-facts lines, the salary table, the salary answer, current or expected salary or CTC, cover letters, form answers, the 3 "why" reasons, phone, email, date of birth, nationality, notes about salary talks |
-| assessment: fit score, verdict (`apply`, `maybe`, `skip`), red flag codes with short public text, visa flag (`yes`, `no`, `unknown`, `not_needed`), public visa proof (JD quote, or register page + date)  | red flag text with the user's numbers (write "Posted salary is below your minimum", never the minimum)                                                                                                                              |
+| assessment: fit score, verdict (`apply`, `maybe`, `skip`), red flag codes (including `shift_work`) with short public text, visa flag (`yes`, `no`, `unknown`, `not_needed`), public visa proof (JD quote, or register page + date)  | red flag text with the user's numbers (write "Posted salary is below your minimum", never the minimum)                                                                                                                              |
 | status and the real status date                                                                                                                                                                            | anything else                                                                                                                                                                                                                       |
 
 The server rejects unknown fields, so send exactly these.
@@ -33,6 +42,8 @@ Field notes: `country_code` is 2 capital letters ("GB" for the UK). `jd_text` is
 - `dedupe.result: "merged"`: the same job was already known (fine). `"maybe_duplicate"`: a very similar job exists; mention it in one line.
 
 `kairo_update_status` may answer `ambiguous` with a short list: show it and ask which job.
+
+If a tool answers `no_account`: the user signed in to the connector but has not finished sign-up on the dashboard. Tell them to open `dashboard_url`, sign in with the same email and tick the consent box, then try again. If it answers `unauthorized`, ask them to reconnect the Kairo connector (Customize → Connectors).
 
 ## After a call
 

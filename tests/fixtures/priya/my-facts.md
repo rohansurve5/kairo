@@ -24,6 +24,8 @@ Last updated: 2026-11-02
 - Countries: IN, NL, AE
 - Cities: Pune, Bengaluru, Mumbai, Amsterdam, Dubai
 - Open to relocation: yes
+- Open to contract roles: no
+- Open to shift or night work: no
 - Score floor: 60
 - Avoid: IT services companies, crypto
 

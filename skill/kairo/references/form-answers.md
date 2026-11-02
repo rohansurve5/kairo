@@ -44,5 +44,6 @@ Indian forms usually ask: current CTC (fixed + variable), expected CTC, notice p
 ## Rules
 
 - Never commit to anything the user has not said (start date, relocation date, salary flexibility).
+- Work preferences (relocation, contract roles, shift or night work, travel, notice): answer only from my-facts. The script prints "ASK THE USER" when my-facts does not say; ask, then write the answer. `truth_check.py` fails a letter or answer that states a preference my-facts does not have.
 - **Forms that forbid AI help:** if the job or form says not to use AI tools, make **only the CV**. Do not write the cover letter or any answers; tell the user to write those themselves.
 - Never fill in or submit the form yourself.

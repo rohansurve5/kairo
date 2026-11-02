@@ -7,7 +7,7 @@ At most 250 words in the paragraphs (the greeting and sign-off are added by the 
 | 1. Why them                 | One line on what the company does (from the JD or their site) and the link to the user's real work. Name the role.                                                                                                                             |
 | 2. Proof one                | The strongest my-facts result that matches the JD's main need, with its real number.                                                                                                                                                           |
 | 3. Proof two (+ honest gap) | A second real result for another JD need. If there is a real gap the reader will notice, one honest line on how the user would close it. Never claim the gap away.                                                                             |
-| 4. Practical close          | Abroad: where they are based and that they are ready to relocate; if the company is a confirmed sponsor (NL register), one line on that. At home in another city: "based in <city>, open to relocating to <job city>". One short closing line. |
+| 4. Practical close          | Abroad: where they are based, and "ready to relocate" **only if my-facts says `Open to relocation: yes`** (not in my-facts: ask first); if the company is a confirmed sponsor (NL register), one line on that. At home in another city: "based in <city>, open to relocating to <job city>" (same rule). No other preference (contract, shifts, travel, start date) unless my-facts says it. One short closing line. |
 
 ## Rules
 

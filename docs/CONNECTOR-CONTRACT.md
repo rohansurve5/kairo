@@ -1,4 +1,4 @@
-# Kairo connector contract (v1.1)
+# Kairo connector contract (v1.2)
 
 The Kairo skill calls these MCP tools on the Kairo server. This file is kept **identical** in both repositories (`kairo` and `kairo-cloud`). Change both copies and the skill's `references/connector.md` together.
 
@@ -6,13 +6,13 @@ The Kairo skill calls these MCP tools on the Kairo server. This file is kept **i
 
 | Item             | Value                                                                                                                                                                                                               |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Endpoint         | `https://<production host>/mcp/<token>`: remote MCP server, Streamable HTTP, stateless, JSON responses                                                                                                              |
-| Auth (V1)        | Secret link. The token in the URL works like a password. The server stores only its SHA-256 hash. A new link can be made at any time; the old one stops working at once.                                            |
+| Endpoint         | `https://kairo.rohansurve.in/mcp` (plain URL, no secret): remote MCP server, Streamable HTTP, stateless, JSON responses |
+| Auth (v1.2)      | OAuth 2.1 login. The server is a resource server; WorkOS AuthKit is the authorization server (client registration by CIMD or DCR). Discovery: `/.well-known/oauth-protected-resource/mcp`. Every call sends `Authorization: Bearer <access token>`; the server checks signature, issuer, audience (= the `/mcp` URL) and expiry. The user is the token's subject (WorkOS user id), never an id sent by the client. Login = email + 6-digit code, the same account as the dashboard. Old secret links (`/mcp/<token>`, v1.1) were retired on 3 Nov 2026. |
 | AI on the server | None. The server validates, checks for duplicates, stores and returns data.                                                                                                                                         |
 | Dates            | `event_date` and `posted_at` are `YYYY-MM-DD` (the user's local date, sent by Claude).                                                                                                                              |
-| Limits           | Request body ≤ 64 KB; `jd_text` ≤ 30,000 characters; about 120 calls per link per hour.                                                                                                                             |
-| Errors           | Tool error whose text is JSON: `{"error": "<code>", "message": "<plain English>", "details": {...}}`. Codes: `invalid_input`, `not_found`, `ambiguous`, `rate_limited`, `server_error`. A wrong link gets HTTP 404. |
-| Version          | Every result has `"contract": "kairo-connector/1.1"`.                                                                                                                                                               |
+| Limits           | Request body ≤ 64 KB; `jd_text` ≤ 30,000 characters; about 120 calls per user per hour. |
+| Errors           | Tool error whose text is JSON (the MCP SDK may put `Error executing tool <name>: ` in front): `{"error": "<code>", "message": "<plain English>", "details": {...}}`. Codes: `invalid_input`, `not_found`, `ambiguous`, `rate_limited`, `server_error`, `no_account` (signed in, but sign-up on the dashboard not finished: open it and tick consent), `unauthorized`. No or bad token: HTTP 401 with `WWW-Authenticate: Bearer … resource_metadata="…"`. |
+| Version          | Every result has `"contract": "kairo-connector/1.2"`. v1.2 (3 Nov 2026): login instead of secret links; red flag code `shift_work`; error `no_account`. |
 
 ### Privacy rule
 
@@ -31,7 +31,7 @@ red_flag.code = years_above | years_below | must_have_missing | language_require
               | salary_below_floor | no_sponsorship | local_only | visa_unknown | sponsor_not_found
               | remote_region | location_not_target | seniority_mismatch | title_mismatch
               | specialised_domain | contract_role | agency_post | stale_posting | notice_too_long
-              | company_hold | other
+              | company_hold | shift_work | other
 country_code  = ISO 3166-1 alpha-2, upper case (IN, NL, IE, DE, PL, FR, AE, SG, GB, ...). "UK" is sent as "GB".
 ```
 
@@ -103,7 +103,7 @@ Call after every job check. Saves the job (or finds the same job already saved) 
 
 ```json
 {
-  "contract": "kairo-connector/1.1",
+  "contract": "kairo-connector/1.2",
   "job_id": "6f1c…",
   "application_id": "a83e…",
   "dedupe": { "result": "new", "matched_job_id": null, "overlap": null },
@@ -151,7 +151,7 @@ or, when the id is not known:
 
 ```json
 {
-  "contract": "kairo-connector/1.1",
+  "contract": "kairo-connector/1.2",
   "application_id": "a83e…",
   "company": "Tulip Commerce B.V.",
   "title": "Product Manager, Merchant Checkout",
@@ -184,7 +184,7 @@ All fields optional. `company`: contains-match, case-insensitive. `limit`: 1..10
 
 ```json
 {
-  "contract": "kairo-connector/1.1",
+  "contract": "kairo-connector/1.2",
   "counts": {
     "checked": 4,
     "ready": 2,
@@ -228,4 +228,4 @@ All fields optional. `company`: contains-match, case-insensitive. `limit`: 1..10
 
 ## Not tools
 
-Consent, a new link, delete my data and export: web pages behind Google login (later). They are not MCP tools, so Claude can never delete data by mistake.
+Consent, export (CSV), status changes from the dashboard and delete my data: web pages at https://kairo.rohansurve.in behind the same login. They are not MCP tools, so Claude can never delete data by mistake. Status changes made on the dashboard are saved with `source = dashboard`.

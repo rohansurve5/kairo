@@ -1,4 +1,5 @@
 {
   "dashboard_url": "https://kairo.rohansurve.in",
+  "connector_url": "https://kairo.rohansurve.in/mcp",
   "launched": false
 }

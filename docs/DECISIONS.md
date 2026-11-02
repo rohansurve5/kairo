@@ -37,6 +37,17 @@ Also fixed: the optional dashboard server uses zero AI (all AI work happens in t
 | A19 | Model names only in `references/model-tips.md`; light tasks → faster model, pack → strongest model; no tips for free-plan users | Saves the user's usage. |
 | A20 | Forms that forbid AI: CV only; the user writes the letter and answers | Respect employers' rules. |
 
+## Decisions from prompt 4 (3 Nov 2026)
+
+| #   | Decision | Why |
+| --- | -------- | --- |
+| L1  | Login for the dashboard and the connector: WorkOS AuthKit, email + 6-digit code only (no passwords); Google later. The same account is used on the website and in the Claude connector. | Maintainer decision. |
+| L2  | The connector URL is plain (`https://kairo.rohansurve.in/mcp`, in `config.json` as `connector_url`); no secret links. | Nothing secret in URLs or logs. |
+| L5  | Contract roles, relocation and shift/night work are asked at setup. Not open → Skip. Open → note only. Not in my-facts → note and ask, never Skip. | Maintainer decision. |
+| A21 | Never write a work preference (relocation, contract, shifts, travel, notice/start, salary) in a letter or answer unless my-facts says it; `truth_check.py` fails it, `form_answers.py` prints ASK THE USER. | Never invent facts. |
+| A22 | Model tips are about the **next** step: the "strongest model" tip goes in the job-check reply before "make the pack". | The old rule tied the tip to the pack reply itself, so it could only come after the pack. |
+| A23 | New red flag code `shift_work` (contract v1.2). | Night / rotational / US-UK shift roles. |
+
 ## Verified facts used (checked 2 Nov 2026)
 
 | Fact                                                                                                                  | Source                                                                    | Status                                                                                     |

@@ -36,7 +36,7 @@ One column, plain text, no tables, no icons, no images: this is what applicant t
 
 - Line 1: who they are, using an approved summary hook from my-facts if there is one (years and areas from my-facts).
 - Line 2: the one strongest result from my-facts that matches this JD, with its real number.
-- Abroad jobs: end with "Open to relocation."
+- Abroad jobs: end with "Open to relocation." only if my-facts says `Open to relocation: yes`.
 - Self-check: if this summary could be pasted into another person's CV unchanged, rewrite it.
 
 ## Bullets
@@ -72,6 +72,6 @@ See `templates/cv.example.json`. Key fields:
 - `country`: job country code (IN, NL, IE, DE, PL, FR, AE, SG, GB).
 - `target.company`, `target.role`: used in the file name, PDF title and the Poland clause.
 - `personal.home_country`, `personal.nationality`: from my-facts.
-- `personal.open_to_relocation`: from my-facts Targets.
+- `personal.open_to_relocation`: true only if my-facts Targets says `Open to relocation: yes`; otherwise false.
 - `personal.needs_visa`: from my-facts Visa needs for this country (the truth check compares them).
 - `options.include_photo`, `options.include_dob`: false unless the user asked and the country allows it.

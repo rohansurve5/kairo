@@ -183,6 +183,11 @@ def sponsorship(text, remote_job=False):
 
 # ---------------------------------------------------------------- other signals
 
+SHIFT = re.compile(r"\b(night shifts?|rotational shifts?|rotating shifts?|graveyard shift|(?:us|uk|emea) (?:time zone )?shifts?|"
+                   r"evening shifts?|weekend shifts?|shift work|work(?:ing)? in shifts|(?:24x7|24 x 7) (?:support|operations|shifts?)|"
+                   r"(?:us|uk) (?:business )?hours (?:from|in) india|night hours)\b", re.I)
+TRAVEL = re.compile(r"\b(?:travel (?:up to |of )?\d{1,2}\s?%|willing(?:ness)? to travel\b|frequent (?:business )?travel\b|"
+                    r"travel (?:is )?required\b|extensive travel\b|\d{1,2}\s?% travel\b)", re.I)
 CONTRACT = re.compile(r"\b(fixed[- ]term|contract(?:or)? (?:role|position|basis)|freelance|temporary (?:role|position|contract)|"
                       r"maternity cover|parental leave cover|\d{1,2}[- ]month contract|interim (?:role|position))\b", re.I)
 AGENCY = re.compile(r"\b(our client|on behalf of (?:our|a) client|we are recruiting for|recruitment (?:agency|partner)|"
@@ -411,6 +416,15 @@ def scan(facts, jd, country, title="", company="", city="", posted=None, source=
     if facts["target_countries"] and code and code not in facts["target_countries"]:
         flags.append(flag("location_not_target", "note", f"{country_name(code)} is not in your target countries",
                           "Not in your target countries"))
+    # Relocation (decision L5: not open -> Skip, open -> note, unknown -> note + ask).
+    needs_move = mode != "remote" and ((code and home and code != home) or
+                                       (city and facts.get("home_city") and fold(city) != fold(facts["home_city"])))
+    if needs_move and facts.get("relocate") is False:
+        flags.append(flag("location_not_target", "skip", f"The job needs a move to {city or country_name(code)}; "
+                          "your facts say you are not open to relocation", "Needs relocation"))
+    elif needs_move and facts.get("relocate") is None:
+        flags.append(flag("location_not_target", "note", f"The job needs a move to {city or country_name(code)}; "
+                          "your facts do not say if you are open to relocation: ask the user", "Needs relocation"))
 
     sen = seniority(title)
     target_sens = {seniority(r) for r in facts["target_roles"]} or {"mid"}
@@ -433,8 +447,20 @@ def scan(facts, jd, country, title="", company="", city="", posted=None, source=
                               "Specialised domain"))
     con = CONTRACT.search(jd)
     if con:
-        flags.append(flag("contract_role", "note", f"Contract / fixed-term role: \"{_snip(jd, con, 30)}\""
-                          + (" (often can't support a work visa)" if visa_needed else ""), "Contract or fixed-term role"))
+        pref = facts.get("contract_ok")
+        why = {False: "; your facts say you are not open to contract roles", True: "",
+               None: "; your facts do not say if you are open to contract roles: ask the user"}[pref]
+        flags.append(flag("contract_role", "skip" if pref is False else "note",
+                          f"Contract / fixed-term role: \"{_snip(jd, con, 30)}\""
+                          + (" (often can't support a work visa)" if visa_needed else "") + why,
+                          "Contract or fixed-term role"))
+    sh = SHIFT.search(jd)
+    if sh:
+        pref = facts.get("shifts_ok")
+        why = {False: "; your facts say you are not open to shift or night work", True: "",
+               None: "; your facts do not say if you are open to shift or night work: ask the user"}[pref]
+        flags.append(flag("shift_work", "skip" if pref is False else "note",
+                          f"Shift or night work: \"{_snip(jd, sh, 30)}\"" + why, "Shift or night work"))
     ag = AGENCY.search(jd)
     if ag:
         flags.append(flag("agency_post", "note", f"Posted by an agency, employer not named: \"{_snip(jd, ag, 30)}\"",
