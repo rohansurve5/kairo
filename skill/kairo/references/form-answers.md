@@ -13,11 +13,12 @@ Show the table as it is. Do not change the facts in it. If a form asks something
 
 ## Salary rule
 
-1. **A number the user gave for this one job wins.** Pass it with `--override "EUR 80,000"`.
-2. **The job post shows a range** in the same currency as the user's table: answer inside the range, 40% up from the bottom (the lower half), rounded. Example: EUR 70,000 to 80,000 gives EUR 74,000.
-3. **Never below the user's minimum** for that country. If the rule gives less, use the minimum.
-4. **No range, or a different currency:** use the user's expected amount from the salary table.
-5. **Posted maximum below the user's minimum:** this is the `salary_below_floor` red flag. Tell the user before they apply.
+1. **Missing ask or floor:** if my-facts has no salary ask or no floor for that country, the script says "ASK THE USER". Ask the user; never fill in, estimate or suggest a number.
+2. **A number the user gave for this one job wins.** Pass it with `--override "EUR 80,000"`.
+3. **The job post shows a range** in the same currency as the user's table: answer inside the range, 40% up from the bottom (the lower half), rounded. Example: EUR 70,000 to 80,000 gives EUR 74,000.
+4. **Never below the user's minimum** for that country. If the rule gives less, use the minimum.
+5. **No range, or a different currency:** use the user's expected amount from the salary table.
+6. **Posted maximum below the user's minimum:** this is the `salary_below_floor` red flag. Tell the user before they apply.
 
 Conventions, shown automatically:
 
@@ -43,5 +44,5 @@ Indian forms usually ask: current CTC (fixed + variable), expected CTC, notice p
 ## Rules
 
 - Never commit to anything the user has not said (start date, relocation date, salary flexibility).
-- **Forms that forbid AI help:** if a form says not to use AI tools, tell the user and do not write those answers. They write them.
+- **Forms that forbid AI help:** if the job or form says not to use AI tools, make **only the CV**. Do not write the cover letter or any answers; tell the user to write those themselves.
 - Never fill in or submit the form yourself.

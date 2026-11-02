@@ -76,6 +76,32 @@ class Package(unittest.TestCase):
         for r in refs:
             self.assertTrue(os.path.exists(os.path.join(SKILL, r)), r)
 
+    def test_dashboard_link_lives_only_in_config_and_is_off(self):
+        import json
+        with open(os.path.join(SKILL, "config.json"), encoding="utf-8") as fh:
+            cfg = json.load(fh)
+        self.assertIs(cfg["launched"], False)
+        url = cfg["dashboard_url"].split("://", 1)[1]
+        model_names = ("Sonnet", "Opus", "Haiku")
+        for base, _, names in os.walk(SKILL):
+            for n in names:
+                if n.endswith((".md", ".py", ".json", ".txt")):
+                    p = os.path.join(base, n)
+                    with open(p, encoding="utf-8", errors="ignore") as fh:
+                        text = fh.read()
+                    if n != "config.json":
+                        self.assertNotIn(url, text, p)
+                    if n != "model-tips.md":
+                        for m in model_names:
+                            self.assertNotIn(m, text, p)
+
+    def test_skill_md_rules_present(self):
+        with open(os.path.join(SKILL, "SKILL.md"), encoding="utf-8") as fh:
+            text = fh.read()
+        for must in ("**Maybe**", "**Skip** only when", "Never guess money", "One next step", "make **only the CV**",
+                     "Your dashboard is updated.", "config.json", "references/model-tips.md", "apply anyway"):
+            self.assertIn(must, text)
+
     def test_font_licence_is_bundled(self):
         self.assertTrue(os.path.exists(os.path.join(SKILL, "assets", "fonts", "OFL.txt")))
 

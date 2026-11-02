@@ -48,6 +48,15 @@ class Salary(unittest.TestCase):
         r = build(self.f, "NL", "", override="€80,000/year")
         self.assertEqual(r["salary"]["text"], "€80,000/year")
 
+    def test_missing_salary_is_asked_never_guessed(self):
+        r = build(self.f, "GB", "Salary: £60,000 – £70,000 per year")
+        rr = rows(r)
+        self.assertTrue(rr["Expected salary"].startswith("ASK THE USER"))
+        self.assertIsNone(r["salary"])
+        self.assertNotIn("Minimum salary (only if the form asks)", rr)
+        r = build(self.f, "GB", "", override="£70,000/year")
+        self.assertEqual(r["salary"]["text"], "£70,000/year")
+
     def test_other_currency_falls_back(self):
         row = self.f["salary"]["NL"]
         out = salary_answer(row, {"currency": "USD", "min": 90000, "max": 110000, "period": "year"})

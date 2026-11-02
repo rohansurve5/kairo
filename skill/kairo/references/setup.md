@@ -21,9 +21,9 @@ Ask only what the CV does not already answer. Number the questions. Give a short
 7. **Never claim.** Anything that must never appear (e.g. "never say I managed people", "no MBA"). Anything in this CV that is outdated or wrong?
 8. **Deal-breakers.** Company types or domains to avoid (e.g. IT services, crypto, contract roles).
 9. **Contact details for the CV.** Confirm email, phone, LinkedIn, website.
-10. **Missing facts.** Only if needed: a missing month, an unclear number.
+10. **Missing facts and your Claude plan.** Only if needed: a missing month, an unclear number. Optional: are you on Claude Free, Pro or Max? (Only used to decide whether to show model tips.)
 
-Keep the message short. If the user skips a question, use a safe default and say which.
+Keep the message short. If the user skips a question, use a safe default and say which, **except money**: never invent a salary ask, floor or CTC. Leave that salary row out and ask again when a job in that country needs it.
 
 ## Step 3. Write my-facts.md
 
@@ -38,6 +38,7 @@ Fill `templates/my-facts-template.md`. Rules:
 - **Visa needs:** one line per target country outside the home country, starting with `needs` or `not needed`.
 - **Never claim:** one line each, `"phrase" — why` or `/regex/ — why`. Add the user's items. Keep them short phrases that would really appear in a CV.
 - **Total experience (years):** a whole number the user agrees with.
+- **Claude plan:** add `- Claude plan: free` under `## Me` only if the user says they are on the free plan (then no model tips).
 - **Date of birth:** leave it out unless the user asks for it (only used on German or UAE CVs, and off by default).
 
 ## Step 4. Check the file

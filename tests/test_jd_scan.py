@@ -23,7 +23,8 @@ class SampleJDs(unittest.TestCase):
         r = scan(self.facts, read_text(fixture("jd-in-bengaluru.txt")), "IN", "Product Manager – Merchant Payments",
                  "Nirvana Ledger", "Bengaluru", source="linkedin", today=TODAY)
         self.assertGreaterEqual(r["baseline"]["score"], 65)
-        self.assertEqual(codes(r, "block"), set())
+        self.assertEqual(codes(r, "skip") | codes(r, "maybe"), set())
+        self.assertEqual(r["verdict_hint"], "apply")
         self.assertFalse(r["needs_visa"])
         s = r["signals"]["salary"]
         self.assertEqual((s["currency"], s["min"], s["max"]), ("INR", 3000000, 4200000))
@@ -36,14 +37,16 @@ class SampleJDs(unittest.TestCase):
                  "Tulip Commerce B.V.", "Amsterdam", posted="2026-10-25", source="company_site", today=TODAY)
         self.assertEqual(r["signals"]["sponsorship"]["value"], "yes")
         self.assertEqual(r["signals"]["languages_required"], [])
-        self.assertEqual(codes(r, "block"), set())
+        self.assertEqual(codes(r, "skip") | codes(r, "maybe"), set())
+        self.assertEqual(r["verdict_hint"], "apply")
         self.assertGreaterEqual(r["baseline"]["score"], 60)
         self.assertEqual(r["signals"]["salary"]["min"], 68000)
 
     def test_uae_blocks(self):
         r = scan(self.facts, read_text(fixture("jd-ae-dubai.txt")), "AE", "Senior Product Manager – Loyalty & CRM",
                  "Falcon Retail Group", "Dubai", today=TODAY)
-        self.assertTrue({"years_above", "language_required", "local_only"} <= codes(r, "block"))
+        self.assertTrue({"years_above", "language_required", "local_only"} <= codes(r, "skip"))
+        self.assertEqual(r["verdict_hint"], "skip")
         self.assertLess(r["baseline"]["score"], 60)
 
     def test_public_text_has_no_user_numbers(self):
@@ -54,8 +57,16 @@ class SampleJDs(unittest.TestCase):
     def test_salary_below_floor_and_stale_posting(self):
         jd = "Product Manager, payments. Salary: €50,000 – €58,000 per year. 5+ years of product experience."
         r = scan(self.facts, jd, "NL", "Product Manager", posted="2026-10-10", source="linkedin", today=TODAY)
-        self.assertIn("salary_below_floor", codes(r, "block"))
+        self.assertIn("salary_below_floor", codes(r, "maybe"))  # Maybe: ask if the budget can reach the floor
         self.assertIn("stale_posting", codes(r))
+
+
+    def test_visa_silent_abroad_is_maybe(self):
+        jd = ("Product Manager, payments and checkout for SMB merchants. 5+ years of product experience. "
+              "Hybrid in Amsterdam. " * 3)
+        r = scan(self.facts, jd, "NL", "Product Manager", today=TODAY)
+        self.assertIn("visa_unknown", codes(r, "maybe"))
+        self.assertEqual(r["verdict_hint"], "maybe")
 
 
 class Wording(unittest.TestCase):

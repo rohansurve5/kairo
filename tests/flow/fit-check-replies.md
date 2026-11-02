@@ -51,6 +51,7 @@ Why:
    Red flags: language required (Arabic), local candidates only, no sponsorship, asks 3+ more years than you have.
    Visa: no. "Candidates must already hold a valid UAE residence visa."
    Salary: AED 25,000–30,000 per month posted (your answer would be AED 28,000/month, your minimum).
+Next: paste the next job, or say 'apply anyway'.
 
 ---
 

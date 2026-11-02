@@ -19,6 +19,7 @@ Last updated: YYYY-MM-DD
 - Total experience (years): 0
 - Notice period: 30 days
 - Languages: English (C1), Hindi (Native)
+<!-- Optional: - Claude plan: free   (only if you are on the free plan; turns off model tips) -->
 
 <!-- Optional, only if you want it on a German or UAE CV (off by default):
 - Date of birth: DD.MM.YYYY -->

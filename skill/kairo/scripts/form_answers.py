@@ -68,7 +68,15 @@ def build(facts, country, jd="", salary_text="", company="", role="", city="", o
     row = facts["salary"].get(code)
     sal = None
     flags = []
-    if row:
+    missing_money = [k for k in ("expected", "minimum") if not row or row.get(k) is None]
+    if missing_money and not override:
+        ask = (f"ASK THE USER: my-facts has no {' or '.join('ask' if k == 'expected' else 'floor' for k in missing_money)}"
+               f" for {country_name(code)}. Never fill in a number.")
+        rows.append(("Expected CTC" if code == "IN" else "Expected salary", ask))
+        flags.append(ask)
+        row = None
+    if row or override:
+        row = row or {"country": code, "currency": "", "period": ""}
         sal = salary_answer(row, posted, override)
         flags += sal["flags"]
         if code == "IN":
@@ -82,11 +90,9 @@ def build(facts, country, jd="", salary_text="", company="", role="", city="", o
             rows.append(("Expected salary", f"{sal['text']}, open to discuss for the right role"))
             if sal["value"] is not None:
                 rows.append(("Expected salary (number only)", f"{int(round(sal['value'])):,}"))
-            if row.get("minimum"):
+            if row.get("minimum") and sal["basis"] != "override":
                 rows.append(("Minimum salary (only if the form asks)",
                              format_money(row["minimum"], row["currency"], row["period"], code)))
-    else:
-        flags.append(f"no salary row for {code} in my-facts: ask the user before answering salary questions")
 
     basis = ""
     if sal:

@@ -362,20 +362,20 @@ def scan(facts, jd, country, title="", company="", city="", posted=None, source=
     yrs = facts.get("years")
     if exp and yrs is not None:
         if exp["min"] > yrs:
-            sev = "block" if exp["min"] - yrs >= 3 else "warn"
+            sev = "skip" if exp["min"] - yrs >= 3 else "note"
             flags.append(flag("years_above", sev, f"Asks {exp['text']}; you have {yrs:g} years",
                               "Asks more years of experience than you have"))
         elif exp.get("max") is not None and exp["max"] + 4 < yrs:
-            flags.append(flag("years_below", "warn", f"Asks {exp['text']}; you have {yrs:g} years (may be junior for you)",
+            flags.append(flag("years_below", "note", f"Asks {exp['text']}; you have {yrs:g} years (may be junior for you)",
                               "Role may be junior for your experience"))
 
     langs = language_check(jd, facts.get("languages", {}))
     for lg in langs:
-        flags.append(flag("language_required", "block", f"Requires {lg['lang']}: \"{lg['snippet'][:120]}\"",
+        flags.append(flag("language_required", "skip", f"Requires {lg['lang']}: \"{lg['snippet'][:120]}\"",
                           f"Requires {lg['lang']}"))
     jl = jd_language(jd)
     if jl != "en":
-        flags.append(flag("jd_not_english", "warn", f"The JD is written in {jl}: the job likely needs {jl}",
+        flags.append(flag("jd_not_english", "note", f"The JD is written in {jl}: the job likely needs {jl}",
                           f"JD is written in {jl}"))
 
     sal = parse_salary(jd)
@@ -385,7 +385,7 @@ def scan(facts, jd, country, title="", company="", city="", posted=None, source=
         hi = convert(sal["max"], sal["currency"], sal["period"], row["currency"], row["period"])
         lo = convert(sal["min"], sal["currency"], sal["period"], row["currency"], row["period"])
         if hi is not None and row.get("minimum") and hi < row["minimum"]:
-            flags.append(flag("salary_below_floor", "block",
+            flags.append(flag("salary_below_floor", "maybe",
                               f"Posted {sal['text']} is below your minimum ({format_money(row['minimum'], row['currency'], row['period'], code)})",
                               "Posted salary is below your minimum"))
         if lo is None:
@@ -396,54 +396,54 @@ def scan(facts, jd, country, title="", company="", city="", posted=None, source=
     local = LOCAL_ONLY.search(jd)
     if visa_needed:
         if local:
-            flags.append(flag("local_only", "block", f"Local candidates only: \"{_snip(jd, local, 40)}\"", "Local candidates only"))
+            flags.append(flag("local_only", "skip", f"Local candidates only: \"{_snip(jd, local, 40)}\"", "Local candidates only"))
         if sp["value"] == "no":
-            flags.append(flag("no_sponsorship", "block", f"No visa sponsorship: \"{sp['quote']}\"", "JD says no visa sponsorship"))
+            flags.append(flag("no_sponsorship", "skip", f"No visa sponsorship: \"{sp['quote']}\"", "JD says no visa sponsorship"))
         elif sp["value"] in ("unknown", "mixed"):
-            flags.append(flag("visa_unknown", "warn",
+            flags.append(flag("visa_unknown", "maybe",
                               "JD is unclear on visa sponsorship: run the visa check" if sp["value"] == "mixed"
                               else "JD does not mention visa sponsorship: run the visa check",
                               "Visa sponsorship not confirmed"))
     scope = remote_scope(jd, home) if mode == "remote" else None
     if scope and code != home:
-        flags.append(flag("remote_region", "block" if visa_needed else "warn",
+        flags.append(flag("remote_region", "skip" if visa_needed else "note",
                           f"Remote, but limited to a region: \"{scope}\"", "Remote role limited to another region"))
     if facts["target_countries"] and code and code not in facts["target_countries"]:
-        flags.append(flag("location_not_target", "warn", f"{country_name(code)} is not in your target countries",
+        flags.append(flag("location_not_target", "note", f"{country_name(code)} is not in your target countries",
                           "Not in your target countries"))
 
     sen = seniority(title)
     target_sens = {seniority(r) for r in facts["target_roles"]} or {"mid"}
     if sen in ("head", "director", "vp", "chief", "principal", "staff") and sen not in target_sens:
-        flags.append(flag("seniority_mismatch", "warn", f"Title level '{sen}' is above your target roles",
+        flags.append(flag("seniority_mismatch", "note", f"Title level '{sen}' is above your target roles",
                           "Seniority above your targets"))
     if sen in ("intern", "junior", "associate") and sen not in target_sens:
-        flags.append(flag("seniority_mismatch", "warn", f"Title level '{sen}' is below your target roles",
+        flags.append(flag("seniority_mismatch", "note", f"Title level '{sen}' is below your target roles",
                           "Seniority below your targets"))
     tm = title_match(title, facts["target_roles"]) if title else None
     if title and facts["target_roles"] and not tm:
-        flags.append(flag("title_mismatch", "warn", f"\"{title}\" does not match your target roles",
+        flags.append(flag("title_mismatch", "note", f"\"{title}\" does not match your target roles",
                           "Title differs from your target roles"))
     sp_dom = SPECIALISED.search(title)
     if sp_dom:
         covered = any(fold(sp_dom.group(0)) in fold(" ".join([s["area"]] + s["keywords"])) for s in facts["strengths"])
         if not covered:
-            flags.append(flag("specialised_domain", "warn",
+            flags.append(flag("specialised_domain", "note",
                               f"Specialised domain in the title ({sp_dom.group(0)}): only apply if your facts cover it",
                               "Specialised domain"))
     con = CONTRACT.search(jd)
     if con:
-        flags.append(flag("contract_role", "warn", f"Contract / fixed-term role: \"{_snip(jd, con, 30)}\""
+        flags.append(flag("contract_role", "note", f"Contract / fixed-term role: \"{_snip(jd, con, 30)}\""
                           + (" (often can't support a work visa)" if visa_needed else ""), "Contract or fixed-term role"))
     ag = AGENCY.search(jd)
     if ag:
-        flags.append(flag("agency_post", "warn", f"Posted by an agency, employer not named: \"{_snip(jd, ag, 30)}\"",
+        flags.append(flag("agency_post", "note", f"Posted by an agency, employer not named: \"{_snip(jd, ag, 30)}\"",
                           "Employer not named (agency post)"))
 
     jn = jd_notice(jd)
     yn = notice_days(facts.get("notice", ""))
     if jn and yn is not None and yn > jn["max_days"]:
-        flags.append(flag("notice_too_long", "warn", f"JD wants {jn['text']}; your notice is {facts.get('notice')}",
+        flags.append(flag("notice_too_long", "note", f"JD wants {jn['text']}; your notice is {facts.get('notice')}",
                           "Your notice period is longer than the JD wants"))
 
     posted_at = posted or posted_from_text(jd, today)
@@ -457,11 +457,15 @@ def scan(facts, jd, country, title="", company="", city="", posted=None, source=
         company_page = source in ("company_site", "greenhouse", "lever", "workday", "ashby", "careers_page")
         limit = 30 if company_page else (21 if code == home else 10)
         if age > limit:
-            flags.append(flag("stale_posting", "warn",
+            flags.append(flag("stale_posting", "note",
                               f"Posted {age} days ago (over {limit} for this source): may be filled or a repost; check the company's careers page",
                               "Posting may be old or a repost"))
 
     base = baseline_score(title, jd, facts, exp)
+    sev = {f["severity"] for f in flags}
+    floor = facts.get("score_floor", 60)
+    hint = "skip" if ("skip" in sev or base["score"] < floor - 15) else "maybe" if "maybe" in sev else \
+        "apply" if base["score"] >= floor else "check"
     return {
         "job": {"title": title, "company": company, "country": code, "country_name": country_name(code), "city": city,
                 "source": source, "posted_at": posted_at, "age_days": age, "work_mode": mode, "seniority": sen,
@@ -472,7 +476,8 @@ def scan(facts, jd, country, title="", company="", city="", posted=None, source=
                     "contract": _snip(jd, con, 30) if con else None, "agency": _snip(jd, ag, 30) if ag else None,
                     "remote_scope": scope, "notice": jn},
         "baseline": base,
-        "score_floor": facts.get("score_floor", 60),
+        "score_floor": floor,
+        "verdict_hint": hint,
         "red_flags": flags,
         "requirements": requirement_lines(jd),
     }
@@ -483,6 +488,7 @@ def print_text(r):
     print(f"Kairo JD scan: {j['title'] or '(no title)'} | {j['company'] or '?'} | {j['country_name']}"
           f"{' | ' + j['city'] if j['city'] else ''}")
     b = r["baseline"]
+    print(f"  verdict hint: {r['verdict_hint']} (you decide after reading the JD; score can move +/-15)")
     print(f"  baseline score: {b['score']} (floor {r['score_floor']}); areas: "
           + (", ".join(f"{a['area']} x{a['hits']}" for a in b["areas"]) or "none matched"))
     s = r["signals"]

@@ -60,11 +60,11 @@ def main():
         r = jd_scan.scan(facts, jd, j["country"], j["title"], j["company"], j["city"], j["posted"], j["source"], TODAY)
         with open(os.path.join(OUT, f"scan-{j['key']}.json"), "w", encoding="utf-8") as fh:
             json.dump(r, fh, indent=2, ensure_ascii=False)
-        blocks = [f["code"] for f in r["red_flags"] if f["severity"] == "block"]
-        warns = [f["code"] for f in r["red_flags"] if f["severity"] == "warn"]
+        blocks = [f["code"] for f in r["red_flags"] if f["severity"] == "skip"]
+        warns = [f["code"] for f in r["red_flags"] if f["severity"] in ("maybe", "note")]
         rows.append((j["key"].upper(), "JD scan", "done",
-                     f"baseline {r['baseline']['score']}, sponsorship {r['signals']['sponsorship']['value']}, "
-                     f"blocks: {', '.join(blocks) or 'none'}; warns: {', '.join(warns) or 'none'}"))
+                     f"baseline {r['baseline']['score']}, hint {r['verdict_hint']}, sponsorship {r['signals']['sponsorship']['value']}, "
+                     f"skip flags: {', '.join(blocks) or 'none'}; other: {', '.join(warns) or 'none'}"))
 
         fa = form_answers.build(facts, j["country"], jd, company=j["company"], role=j["title"], city=j["city"])
         with open(os.path.join(OUT, f"form-answers-{j['key']}.md"), "w", encoding="utf-8") as fh:
