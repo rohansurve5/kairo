@@ -6,7 +6,7 @@ The Kairo dashboard is optional and free. The user signs in at the dashboard wit
 
 If `launched` is false, say the dashboard is not open yet and use the chat tracker. If it is true, give these steps:
 
-1. Open `dashboard_url`, sign in with your email (we send a 6-digit code) and tick the consent box.
+1. Open `dashboard_url` and sign in with your email (we send a 6-digit code). Your dashboard is created right away.
 2. In Claude: Customize → Connectors → Add custom connector. Name: Kairo. URL: `connector_url`.
 3. Click Connect and sign in with the same email.
 4. In the connector settings, set the three Kairo tools to "Always allow".
@@ -43,7 +43,7 @@ Field notes: `country_code` is 2 capital letters ("GB" for the UK). `jd_text` is
 
 `kairo_update_status` may answer `ambiguous` with a short list: show it and ask which job.
 
-If a tool answers `no_account`: the user signed in to the connector but has not finished sign-up on the dashboard. Tell them to open `dashboard_url`, sign in with the same email and tick the consent box, then try again. If it answers `unauthorized`, ask them to reconnect the Kairo connector (Customize → Connectors).
+If a tool answers `no_account`: the account could not be created at the connector sign-in. Tell them to open `dashboard_url`, sign in with the same email, then try again. If it answers `unauthorized`, ask them to reconnect the Kairo connector (Customize → Connectors).
 
 ## After a call
 

@@ -228,4 +228,4 @@ All fields optional. `company`: contains-match, case-insensitive. `limit`: 1..10
 
 ## Not tools
 
-Consent, export (CSV), status changes from the dashboard and delete my data: web pages at https://kairo.rohansurve.in behind the same login. They are not MCP tools, so Claude can never delete data by mistake. Status changes made on the dashboard are saved with `source = dashboard`.
+Export (CSV), status changes from the dashboard and delete my data: web pages at https://kairo.rohansurve.in behind the same login. Consent is the WorkOS sign-in page ("By continuing, you agree to ..."): the first sign-in, on the website or the connector, creates the account. They are not MCP tools, so Claude can never delete data by mistake. Status changes made on the dashboard are saved with `source = dashboard`.
