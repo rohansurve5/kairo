@@ -2,7 +2,7 @@
 
 All notable changes to Kairo. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [1.0.0] - 2026-11-06
+## [1.0.0] - 2026-11-04
 
 The first public release.
 

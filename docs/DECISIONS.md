@@ -33,7 +33,7 @@ Also fixed: the optional dashboard server uses zero AI (all AI work happens in t
 | A15 | Default CV length 300 to 750 words (user can override in my-facts `Rules`)                                                                                                                                                                       | 1 page for most people, never over 2.                                                                                                            |
 | A16 | Never guess money: a missing salary ask or floor is asked, never filled in (`form_answers.py` prints ASK THE USER) | User request, prompt 3. |
 | A17 | Every reply ends with one clear next step | Non-technical users. |
-| A18 | Dashboard link only in `skill/kairo/config.json` with `launched: false`; invites only after setup, after the 3rd job and on "show my jobs", never once connected | One place to change at launch. |
+| A18 | Dashboard link only in `skill/kairo/config.json` (`launched: true` since launch, 4 Nov 2026); invites only after setup, after the 3rd job and on "show my jobs", never once connected | One place to change at launch. |
 | A19 | Model names only in `references/model-tips.md`; light tasks → faster model, pack → strongest model; no tips for free-plan users | Saves the user's usage. |
 | A20 | Forms that forbid AI: CV only; the user writes the letter and answers | Respect employers' rules. |
 

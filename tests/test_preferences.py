@@ -157,7 +157,7 @@ class SkillText(unittest.TestCase):
         import json
         cfg = json.loads(self.read("config.json"))
         self.assertEqual(cfg["connector_url"], "https://kairo.rohansurve.in/mcp")
-        self.assertIs(cfg["launched"], False)
+        self.assertIs(cfg["launched"], True)
         c = self.read("references/connector.md")
         self.assertIn("connector_url", c)
         self.assertNotIn("secret link", c.lower())

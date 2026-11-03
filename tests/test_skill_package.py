@@ -76,11 +76,11 @@ class Package(unittest.TestCase):
         for r in refs:
             self.assertTrue(os.path.exists(os.path.join(SKILL, r)), r)
 
-    def test_dashboard_link_lives_only_in_config_and_is_off(self):
+    def test_dashboard_link_lives_only_in_config_and_is_on(self):
         import json
         with open(os.path.join(SKILL, "config.json"), encoding="utf-8") as fh:
             cfg = json.load(fh)
-        self.assertIs(cfg["launched"], False)
+        self.assertIs(cfg["launched"], True)
         url = cfg["dashboard_url"].split("://", 1)[1]
         model_names = ("Sonnet", "Opus", "Haiku")
         for base, _, names in os.walk(SKILL):
