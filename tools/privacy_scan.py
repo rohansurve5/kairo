@@ -22,22 +22,27 @@ DENY = {
     "8e62be434ac06469", "e894462a4e2e3e3e", "4a81428868842730", "4e64f4e6eaa5b906", "b72db39b6e5ec0f8",
     "784dabc8374d3458", "8d71cf721799dee0", "7f17dfab0c3ea669", "699d1f2e31611fe6", "779fcd33d45f1772",
 }
+# The maintainer's public name and GitHub handle (hashes): allowed ONLY in the public owner files below
+# (README credit, security contact, changelog links). Every other forbidden term is still blocked there.
+PUBLIC_IDENTITY = {"175fe25e87635a04", "4c1be7f5982f74ae", "b72db39b6e5ec0f8", "1f60dde634ad3452"}
+OWNER_FILES = {"README.md", "SECURITY.md", "CHANGELOG.md", "CONTRIBUTING.md"}
 TEXT_EXT = {"", ".md", ".py", ".json", ".txt", ".html", ".toml", ".yml", ".yaml", ".csv"}
 LICENCE_FILES = {"LICENSE", "LICENSE.txt"}
-DEFAULT = ["skill", "docs", "tests/fixtures", "tests/flow", "CLAUDE.md", "README.md", "tools"]
+DEFAULT = ["skill", "docs", "tests/fixtures", "tests/flow", "CLAUDE.md", "README.md", "CONTRIBUTING.md",
+           "SECURITY.md", "CHANGELOG.md", "tools"]
 
 
 def h(s):
     return hashlib.sha256(s.encode()).hexdigest()[:16]
 
 
-def scan_text(text):
+def scan_text(text, allow=frozenset()):
     words = re.findall(r"[a-z0-9]+", text.lower())
     hits = set()
     for n in (1, 2, 3):
         for i in range(len(words) - n + 1):
             k = h(" ".join(words[i:i + n]))
-            if k in DENY:
+            if k in DENY and k not in allow:
                 hits.add((i, n))
     return [" ".join(words[i:i + n]) for i, n in sorted(hits)]
 
@@ -62,7 +67,8 @@ def scan(paths=None):
         if os.path.basename(f) in LICENCE_FILES:  # the copyright holder's name belongs there
             continue
         with open(f, encoding="utf-8", errors="ignore") as fh:
-            hits = scan_text(fh.read())
+            owner = os.path.dirname(os.path.abspath(f)) == ROOT and os.path.basename(f) in OWNER_FILES
+            hits = scan_text(fh.read(), PUBLIC_IDENTITY if owner else frozenset())
         if hits:
             found[os.path.relpath(f, ROOT)] = len(hits)
     return found

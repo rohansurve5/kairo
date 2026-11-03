@@ -20,7 +20,10 @@ See `docs/DECISIONS.md` (9 locked decisions + build decisions + verified facts).
 
 ```
 CLAUDE.md                  this guide
-README.md                  short public readme
+README.md                  public readme (screenshots in docs/images/, fake data only)
+CONTRIBUTING.md            how to contribute
+SECURITY.md                how to report a security problem
+CHANGELOG.md               release notes (v1.0.0 = launch)
 LICENSE                    MIT
 docs/DECISIONS.md          skill decisions and verified facts (server decisions are private)
 docs/CONNECTOR-CONTRACT.md MCP tools the skill calls (identical copy in ../kairo-cloud)
