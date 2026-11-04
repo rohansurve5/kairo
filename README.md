@@ -29,6 +29,8 @@
 
 You don't need the dashboard. Download `kairo-skill.zip` from the [latest release](https://github.com/rohansurve5/kairo/releases/latest), do step 3 above, then say **"set up Kairo"** in a Claude project. Kairo then keeps a simple tracker table in the chat, and nothing is sent to Kairo at all.
 
+**Download Kairo only from [kairo.rohansurve.in](https://kairo.rohansurve.in) or this repo's [Releases](https://github.com/rohansurve5/kairo/releases).**
+
 ## Privacy
 
 | Stays in your Claude, never sent to Kairo | Saved on your dashboard (only if you use it) |
